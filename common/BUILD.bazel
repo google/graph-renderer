@@ -1,0 +1,46 @@
+load("@npm//@bazel/karma:index.bzl", "karma_web_test")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "interfaces",
+    srcs = ["interfaces.ts"],
+)
+
+ts_library(
+    name = "utils",
+    srcs = ["utils.ts"],
+    deps = [
+        ":interfaces",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = [
+        "compute_fit_to_screen_test.ts",
+        "utils_test.ts",
+    ],
+    deps = [
+        ":compute_fit_to_screen",
+        ":interfaces",
+        ":utils",
+        "@npm//@types/jasmine",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    browsers = [
+        "//testing/web/browsers:chrome-linux",
+    ],
+    test_lib = ":test_lib",
+)
+
+ts_library(
+    name = "compute_fit_to_screen",
+    srcs = ["compute_fit_to_screen.ts"],
+    deps = [":interfaces"],
+)

@@ -1,0 +1,38 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//@bazel/karma:index.bzl", "karma_web_test")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "harness",
+    testonly = True,
+    srcs = ["harness.ts"],
+    deps = [
+        "//third_party/javascript/graph_renderer",
+        "//common:interfaces",
+        "//directed_graph",
+        "//edge_path_service",
+        "//node_render",
+    ],
+)
+
+# Test for the harness itself
+ts_library(
+    name = "harness_test_lib",
+    testonly = True,
+    srcs = ["harness_test.ts"],
+    deps = [
+        ":harness",
+        "@npm//jasmine-core",
+        "//common:interfaces",
+        "//edge_path_service:default_edge_path_service",
+        "@npm//lit",
+        "@npm//@types/jasmine",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    browsers = ["//testing/web/browsers:chrome-linux"],
+    test_lib = ":harness_test_lib",
+)

@@ -1,0 +1,43 @@
+load("@npm//@bazel/karma:index.bzl", "karma_web_test")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "directed_graph",
+    srcs = [
+        "directed_graph.ts",
+    ] + ["directed_graph.css"],
+    deps = [
+        "//common:interfaces",
+        "//common:utils",
+        "//edge_canvas",
+        "//edge_label_render",
+        "//edge_path_service",
+        "//node_render",
+        "@npm//lit",
+        "@npm//rxjs",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = ["directed_graph_test.ts"],
+    deps = [
+        ":directed_graph",
+        "//common:interfaces",
+        "//edge_path_service:default_edge_path_service",
+        "@npm//@types/jasmine",
+        "@npm//jasmine-core",
+        "@npm//lit",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    browsers = [
+        "//testing/web/browsers:chrome-linux",
+    ],
+    test_lib = ":test_lib",
+)

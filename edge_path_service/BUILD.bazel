@@ -1,0 +1,92 @@
+load("@npm//@bazel/karma:index.bzl", "karma_web_test")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "edge_path_service",
+    srcs = [
+        "edge_path_service.ts",
+    ],
+    deps = [
+        "//common:interfaces",
+    ],
+)
+
+ts_library(
+    name = "default_edge_path_service",
+    srcs = [
+        "default_edge_path_service.ts",
+    ],
+    deps = [
+        ":edge_path_service",
+        "//common:interfaces",
+        "//common:utils",
+    ],
+)
+
+ts_library(
+    name = "edge_path_service_test_lib",
+    testonly = True,
+    srcs = ["edge_path_service_test.ts"],
+    deps = [
+        ":edge_path_service",
+        "//common:interfaces",
+        "//javascript/angular2/testing/catalyst/fake_async",
+        "@npm//@types/jasmine",
+    ],
+)
+
+ts_library(
+    name = "default_edge_path_service_test_lib",
+    testonly = True,
+    srcs = ["default_edge_path_service_test.ts"],
+    deps = [
+        ":default_edge_path_service",
+        "//common:interfaces",
+        "//javascript/angular2/testing/catalyst/fake_async",
+        "@npm//@types/jasmine",
+        "@npm//jasmine-core",
+    ],
+)
+
+ts_library(
+    name = "elk_edge_path_service",
+    srcs = [
+        "elk_edge_path_service.ts",
+    ],
+    deps = [
+        ":edge_path_service",
+        "//common:interfaces",
+        "//common:utils",
+    ],
+)
+
+ts_library(
+    name = "elk_edge_path_service_test_lib",
+    testonly = True,
+    srcs = ["elk_edge_path_service_test.ts"],
+    deps = [
+        ":elk_edge_path_service",
+        "//common:interfaces",
+        "@npm//@types/jasmine",
+    ],
+)
+
+karma_web_test(
+    name = "edge_path_service_test",
+    browsers = ["//testing/web/browsers:chrome-linux"],
+    test_lib = ":edge_path_service_test_lib",
+)
+
+karma_web_test(
+    name = "default_edge_path_service_test",
+    browsers = ["//testing/web/browsers:chrome-linux"],
+    test_lib = ":default_edge_path_service_test_lib",
+)
+
+karma_web_test(
+    name = "elk_edge_path_service_test",
+    browsers = ["//testing/web/browsers:chrome-linux"],
+    test_lib = ":elk_edge_path_service_test_lib",
+)

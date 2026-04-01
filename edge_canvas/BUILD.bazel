@@ -1,0 +1,39 @@
+load("@npm//@bazel/karma:index.bzl", "karma_web_test")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "edge_canvas",
+    srcs = [
+        "edge_canvas.ts",
+    ] + ["edge_canvas.css"],
+    deps = [
+        "//common:interfaces",
+        "@npm//lit",
+        "@npm//rxjs",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = ["edge_canvas_test.ts"],
+    deps = [
+        ":edge_canvas",
+        "//common:interfaces",
+        "//testing/karma/karma_scuba_framework",
+        "@npm//@types/jasmine",
+        "@npm//jasmine-core",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    browsers = [
+        "//testing/web/browsers:chrome-linux",
+    ],
+    data = glob(["g3doc/scuba_goldens/**"]),
+    karma_plugins = ["//testing/karma/karma_scuba_framework:karma_scuba"],
+    test_lib = ":test_lib",
+)

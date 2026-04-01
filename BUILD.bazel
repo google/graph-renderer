@@ -1,0 +1,76 @@
+load("@npm//@bazel/karma:index.bzl", "karma_web_test")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(
+    ["LICENSE"],
+    ["//visibility:public"],
+)
+
+ts_library(
+    name = "graph_renderer",
+    srcs = [
+        "graph_renderer.ts",
+    ] + ["graph_renderer.css"],
+    deps = [
+        "//common:interfaces",
+        "//common:utils",
+        "//directed_graph",
+        "//edge_path_service",
+        "//minimap",
+        "@npm//lit",
+        "@npm//rxjs",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = ["graph_renderer_test.ts"],
+    deps = [
+        ":graph_renderer",
+        "//common:interfaces",
+        "//edge_path_service:default_edge_path_service",
+        "@npm//@types/jasmine",
+        "@npm//jasmine-core",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    browsers = [
+        "//testing/web/browsers:chrome-linux",
+    ],
+    test_lib = ":test_lib",
+)
+
+ts_library(
+    name = "graph_renderer_demo",
+    srcs = ["graph_renderer_demo.ts"],
+    deps = [
+        ":graph_renderer",
+        "//common:compute_fit_to_screen",
+        "//common:interfaces",
+        "//directed_graph",
+        "//edge_canvas",
+        "//edge_path_service",
+        "//edge_path_service:default_edge_path_service",
+        "@npm//lit",
+    ],
+)
+
+ts_library(
+    name = "graph_renderer_elkjs_demo",
+    srcs = ["graph_renderer_elkjs_demo.ts"],
+    deps = [
+        ":graph_renderer",
+        "//common:compute_fit_to_screen",
+        "//common:interfaces",
+        "//directed_graph",
+        "//edge_path_service",
+        "//edge_path_service:elk_edge_path_service",
+        "@npm//elkjs",
+        "@npm//lit",
+    ],
+)

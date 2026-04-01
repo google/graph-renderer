@@ -1,0 +1,33 @@
+load("@npm//@bazel/karma:index.bzl", "karma_web_test")
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "minimap",
+    srcs = ["minimap.ts"] + ["minimap.css"],
+    deps = [
+        "//common:interfaces",
+        "@npm//lit",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = ["minimap_test.ts"],
+    deps = [
+        ":minimap",
+        "//common:interfaces",
+        "@npm//@types/jasmine",
+        "@npm//jasmine-core",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    browsers = [
+        "//testing/web/browsers:chrome-linux",
+    ],
+    test_lib = ":test_lib",
+)
