@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "./node_modules/gts/",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "node/no-published-import": "off",
+    "n/no-unsupported-features/node-builtins": ["error", {
+      "version": ">=18.0.0"
+    }]
+  }
+}
