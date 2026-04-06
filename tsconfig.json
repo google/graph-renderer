@@ -1,0 +1,45 @@
+{
+  "compilerOptions": {
+    "extends": "./node_modules/gts/tsconfig-google.json",
+    /* Base Options */
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+
+    /* Lit & Web Components Support */
+    // Enables support for Lit decorators (@customElement, @property)
+    "experimentalDecorators": true,
+    // Required for Lit: standard class fields break Lit's reactive property
+    // initialization. Setting this to false ensures decorators handle fields.
+    "useDefineForClassFields": false,
+
+    /* Bundler Environment (Vite/Esbuild) */
+    // Ensures each file can be transpiled independently (required by Vite/Esbuild)
+    "isolatedModules": true,
+    // Vite handles the actual emission of JS files; tsc is used for type-checking only
+    "noEmit": true,
+
+    /* Type Checking */
+    "strict": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    /* Interop & Safety */
+    "esModuleInterop": true,
+    // Speeds up compilation by skipping type checking of declaration files (.d.ts)
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+  },
+  "include": [
+    "**/*.ts",
+    "vite-env.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build"
+  ]
+}

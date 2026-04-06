@@ -1,0 +1,89 @@
+/**
+ * Copyright 2025 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * @license
+ * Copyright 2025 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+:host {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Pass clicks through the SVG element */
+}
+
+.edge-canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+
+  &.dragging-tentative-edge {
+    pointer-events: all;
+  }
+}
+
+.edge {
+  fill: none;
+  stroke-width: var(--edge-width, 1.5px);
+  pointer-events: stroke; /* Allow clicks on the line itself */
+  stroke-linecap: round;
+}
+
+.tentative-edge {
+  stroke-dasharray: 2, 2;
+  stroke-width: 1.5px;
+}
+
+.edge-interactive:hover,
+.edge-hit-area:hover + .edge-interactive {
+  stroke: var(--edge-color-hover, black);
+  stroke-width: var(--edge-width-hover, 2.5px);
+}
+
+/* Dashes */
+.edge-dash-small-dash {
+  stroke-dasharray: 2, 2;
+}
+.edge-dash-large-dash {
+  stroke-dasharray: 6, 6;
+}
+
+/* Opacity */
+.edge-opacity-low {
+  opacity: 0.4;
+}
+
+/* Animations */
+@keyframes flow {
+  from { stroke-dashoffset: 20; }
+  to { stroke-dashoffset: 0; }
+}
+.edge-animation-flow-slow {
+  stroke-dasharray: 10, 10;
+  animation: flow 2s linear infinite;
+}
+.edge-animation-flow-fast {
+  stroke-dasharray: 10, 10;
+  animation: flow 0.8s linear infinite;
+}
