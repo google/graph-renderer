@@ -1,0 +1,71 @@
+name: Deploy
+on:
+  push:
+    branches: [main]
+    tags: ['v*'] # Triggers for both main branch pushes and version tags
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+
+      - run: npm install
+
+      # We run build for the demo and build:lib for the npm package
+      - run: npm run build
+      - run: npm run build:lib
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+      - name: Upload Build for npm
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: dist
+
+  deploy-pages:
+    needs: build
+    # Only deploy the demo when pushing to the main branch
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  publish-npm:
+    needs: build
+    # Only publish to npm when a version tag (v1.0.0) is pushed
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-files
+          path: dist
+
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
