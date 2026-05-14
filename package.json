@@ -1,6 +1,6 @@
 {
   "name": "@google/graph-renderer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/google/graph-renderer.git"
@@ -10,40 +10,68 @@
     "registry": "https://wombat-dressing-room.appspot.com"
   },
   "type": "module",
+  "sideEffects": [
+    "*.css",
+    "./dist/graph-renderer.js",
+    "./dist/graph-renderer-elk.js",
+    "./public_api.ts",
+    "./public_api_elk.ts",
+    "./graph_renderer.ts",
+    "./directed_graph/directed_graph.ts",
+    "./edge_canvas/edge_canvas.ts",
+    "./edge_label_render/edge_label_render.ts",
+    "./minimap/minimap.ts",
+    "./node_render/node_render.ts"
+  ],
   "files": [
     "dist"
   ],
   "main": "./dist/graph-renderer.js",
   "module": "./dist/graph-renderer.js",
-  "types": "./dist/graph_renderer.d.ts",
+  "types": "./dist/public_api.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/graph_renderer.d.ts",
+      "types": "./dist/public_api.d.ts",
       "import": "./dist/graph-renderer.js"
-    }
+    },
+    "./elk": {
+      "types": "./dist/public_api_elk.d.ts",
+      "import": "./dist/graph-renderer-elk.js"
+    },
+    "./package.json": "./package.json"
   },
   "scripts": {
     "dev": "vite",
     "build": "vite build --outDir dist-demo",
-    "build:lib": "vite build --mode plugin",
+    "build:lib": "npm run build:lib:core && npm run build:lib:elk",
+    "build:lib:core": "cross-env LIB_ENTRY=core vite build --mode plugin",
+    "build:lib:elk": "cross-env LIB_ENTRY=elk vite build --mode plugin",
     "preview": "vite preview --outDir dist-demo",
     "typecheck": "tsc --noEmit",
+    "typecheck:smoke": "tsc --noEmit -p tsconfig.smoke.json",
     "test": "vitest",
     "test:run": "vitest run",
     "test:ui": "vitest --ui",
     "lint": "gts lint",
     "fix": "gts fix",
-    "clean": "gts clean"
+    "clean": "gts clean",
+    "prepublishOnly": "npm run typecheck && npm run test:run && npm run build:lib"
   },
   "peerDependencies": {
     "elkjs": "^0.9.0",
     "lit": "^3.0.0",
     "rxjs": "^7.8.0"
   },
+  "peerDependenciesMeta": {
+    "elkjs": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",
     "@types/node": "^25.5.2",
     "@vitest/ui": "^3.2.4",
+    "cross-env": "^7.0.3",
     "elkjs": "^0.9.0",
     "jsdom": "^27.0.1",
     "lit": "^3.0.0",

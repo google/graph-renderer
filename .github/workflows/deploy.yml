@@ -64,6 +64,11 @@ jobs:
           node-version: 20
           registry-url: 'https://wombat-dressing-room.appspot.com/'
 
+      # The `prepublishOnly` script in package.json invokes locally-installed
+      # tools (tsc, vitest, vite, cross-env) as a release-time safety net,
+      # so node_modules must exist before `npm publish` runs.
+      - run: npm install
+
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4
         with:

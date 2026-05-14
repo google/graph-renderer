@@ -23,24 +23,27 @@ import { LitElement, css, html } from 'lit';
 import { customElement, query, state } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 
-import { computeFitToScreen } from './common/compute_fit_to_screen';
+// `./public_api` exports the runtime values and types used below; importing
+// it for its side effects also registers the `<gr-graph-renderer>` custom
+// element used in the template. `./public_api_elk` exports the ELK-backed
+// edge path service used by this demo.
+import './public_api';
 import {
   BaseEdge,
   BaseNode,
+  EDGE_LABEL_TEMPLATE_ID,
   EdgeSection,
   EndpointMarker,
+  EdgePathService,
   Graph,
+  GraphRenderer,
   Port,
   Side,
-} from './common/interfaces';
-import { EDGE_LABEL_TEMPLATE_ID } from './directed_graph/directed_graph';
-import { EdgePathService } from './edge_path_service/edge_path_service';
-import {
-  ElkEdgePathService,
-  ElkLabelPositioning,
-} from './edge_path_service/elk_edge_path_service';
-import './graph_renderer';
-import { GraphRenderer, ZoomStepConfig } from './graph_renderer';
+  ZoomStepConfig,
+  computeFitToScreen,
+} from './public_api';
+// ELK-backed services live on the dedicated `/elk` subpath barrel.
+import { ElkEdgePathService, ElkLabelPositioning } from './public_api_elk';
 import ELK, { type ElkExtendedEdge, type ElkNode } from 'elkjs';
 
 const NODE_TEMPLATE_ID = 'default';

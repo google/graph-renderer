@@ -1,0 +1,39 @@
+// Build-only TypeScript configuration used by `vite-plugin-dts` to emit
+// per-file `.d.ts` declarations into `dist/` for the published library.
+// Overrides `noEmit` from the base config (which is `true` because Vite
+// handles JS emission) and limits the source set to the runtime modules
+// shipped on npm (excludes demos, tests, and the Vite config itself).
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": ".",
+    "outDir": "dist"
+  },
+  "include": [
+    "public_api.ts",
+    "public_api_elk.ts",
+    "graph_renderer.ts",
+    "common/**/*.ts",
+    "directed_graph/**/*.ts",
+    "edge_canvas/**/*.ts",
+    "edge_label_render/**/*.ts",
+    "edge_path_service/**/*.ts",
+    "minimap/**/*.ts",
+    "node_render/**/*.ts",
+    "vite-env.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "testing/**",
+    "**/*.test.ts",
+    "graph_renderer_demo.ts",
+    "graph_renderer_elkjs_demo.ts",
+    "vite.config.ts"
+  ]
+}
