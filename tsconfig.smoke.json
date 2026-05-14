@@ -1,0 +1,31 @@
+// Scoped TypeScript configuration used by `npm run typecheck:smoke` to
+// validate the public-API barrels and their compile-time smoke tests
+// without typechecking the demos or the Vite config. Inherits all
+// `compilerOptions` from the base `tsconfig.json`.
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "public_api.ts",
+    "public_api_elk.ts",
+    "graph_renderer.ts",
+    "common/**/*.ts",
+    "directed_graph/**/*.ts",
+    "edge_canvas/**/*.ts",
+    "edge_label_render/**/*.ts",
+    "edge_path_service/**/*.ts",
+    "minimap/**/*.ts",
+    "node_render/**/*.ts",
+    "testing/public_api_smoke.ts",
+    "testing/public_api_elk_smoke.ts",
+    "vite-env.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "**/*.test.ts",
+    "graph_renderer_demo.ts",
+    "graph_renderer_elkjs_demo.ts",
+    "vite.config.ts"
+  ]
+}

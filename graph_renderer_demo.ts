@@ -24,27 +24,28 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
 
-import { computeFitToScreen } from './common/compute_fit_to_screen';
+// `./public_api` exports the runtime values and types used below; importing
+// it for its side effects also registers the `<gr-graph-renderer>` custom
+// element used in the template.
+import './public_api';
 import {
+  BUILT_IN_MARKER_DEFINITIONS,
   BaseEdge,
   BaseNode,
+  DefaultEdgePathService,
+  EDGE_LABEL_TEMPLATE_ID,
   EdgeDash,
+  EdgePathService,
   EndpointMarker,
+  GraphRenderer,
   LabelConfiguration,
+  MouseWheelBehavior,
   Point,
   Side,
-  type CustomEndpointMarker,
-} from './common/interfaces';
-import { BUILT_IN_MARKER_DEFINITIONS } from './edge_canvas/edge_canvas';
-import { EDGE_LABEL_TEMPLATE_ID } from './directed_graph/directed_graph';
-import { DefaultEdgePathService } from './edge_path_service/default_edge_path_service';
-import { EdgePathService } from './edge_path_service/edge_path_service';
-import './graph_renderer';
-import {
-  GraphRenderer,
-  MouseWheelBehavior,
   ZoomStepConfig,
-} from './graph_renderer';
+  computeFitToScreen,
+  type CustomEndpointMarker,
+} from './public_api';
 
 const NODE_TEMPLATE_ID = 'default-node-id';
 const DRAG_DISABLED_NODE_TEMPLATE_ID = 'drag-disabled-node-id';

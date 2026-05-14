@@ -17,8 +17,10 @@ Developed to provide a standardized, high-performance graph visualization compon
 
 -   [Features](#features)
 -   [Getting Started](#getting-started)
-    -   [Option 1: Development and Source (Recommended)](#option-1-development-and-source-recommended)
-    -   [Option 2: Via npm](#option-2-via-npm)
+    -   [Option 1: Via npm (Recommended)](#option-1-via-npm-recommended)
+        -   [Optional: ELK-backed layout](#optional-elk-backed-layout)
+        -   [TypeScript](#typescript)
+    -   [Option 2: From Source (For Contributors)](#option-2-from-source-for-contributors)
 -   [Basic Usage Example](#basic-usage-example)
 -   [Advanced Usage: Using Custom Components as Node Templates](#advanced-usage-using-custom-components-as-node-templates)
     -   [1. Create a Custom Node Component](#1-create-a-custom-node-component)
@@ -71,9 +73,61 @@ Developed to provide a standardized, high-performance graph visualization compon
 
 You can integrate the Graph Renderer into your project using one of the two following options.
 
-### Option 1: Development and Source (Recommended)
+### Option 1: Via npm (Recommended)
 
-For now, we recommend cloning the repository and using the included build tooling. This ensures the best experience with type checking, testing, and custom component development.
+The library is published to the npm registry as a prebuilt ES module with full
+TypeScript definitions, sourcemaps, and externalized peer dependencies.
+
+```bash
+npm install @google/graph-renderer lit rxjs
+```
+
+Then import the component once (which registers the `<gr-graph-renderer>`
+custom element) and the public types you need:
+
+```typescript
+import '@google/graph-renderer';
+import {
+  BaseNode,
+  BaseEdge,
+  Side,
+  DefaultEdgePathService,
+} from '@google/graph-renderer';
+```
+
+#### Optional: ELK-backed layout
+
+If you want graphs laid out by [`elkjs`](https://github.com/kieler/elkjs)
+instead of the built-in `DefaultEdgePathService`, install `elkjs` and import
+the `ElkEdgePathService` from the dedicated `/elk` subpath.
+
+```bash
+npm install elkjs
+```
+
+```typescript
+import '@google/graph-renderer';
+import { GraphRenderer } from '@google/graph-renderer';
+import {
+  ElkEdgePathService,
+  ElkLabelPositioning,
+} from '@google/graph-renderer/elk';
+```
+
+#### TypeScript
+
+The package ships full TypeScript definitions for the entire public API,
+including the optional `/elk` subpath. It targets **TypeScript 5.4+** and is
+consumed cleanly with `"moduleResolution": "bundler"` or
+`"node16"`/`"nodenext"`. `lit` and `rxjs` are declared as `peerDependencies`;
+`elkjs` is an *optional* peer (only required by consumers of
+`@google/graph-renderer/elk`).
+
+### Option 2: From Source (For Contributors)
+
+If you intend to develop on the renderer itself, contribute changes back, or
+experiment with the demo applications, clone the repository and use the
+included build tooling.
 
 1.  **Clone the repository**:
     ```bash
@@ -97,14 +151,6 @@ For now, we recommend cloning the repository and using the included build toolin
 
 For more advanced commands such as testing, linting, and building the library, see the **[Development and Scripts](#development-and-scripts)** section below.
 
-### Option 2: Via npm
-
-The library is also available as a prebuilt package on the npm registry, although it currently lacks full TypeScript definitions; this is a known limitation that will be resolved in a future release.
-
-```bash
-npm install @google/graph-renderer
-```
-
 ## Basic Usage Example
 
 Here is a basic example of how to use the `<gr-graph-renderer>` component with
@@ -113,9 +159,13 @@ inline templates.
 ```typescript
 import {LitElement, html} from 'lit';
 import {customElement, state} from 'lit/decorators';
-import {BaseNode, BaseEdge, Side} from './common/interfaces';
-import {DefaultEdgePathService} from './edge_path_service/default_edge_path_service';
-import './graph_renderer';
+import '@google/graph-renderer';
+import {
+  BaseNode,
+  BaseEdge,
+  DefaultEdgePathService,
+  Side,
+} from '@google/graph-renderer';
 
 @customElement('my-graph-element')
 export class MyGraphElement extends LitElement {
@@ -213,9 +263,13 @@ import {customElement, state} from 'lit/decorators';
 import './my-task-node';
 
 // ... other imports
-import {BaseNode, BaseEdge, Side} from './common/interfaces';
-import {DefaultEdgePathService} from './edge_path_service/default_edge_path_service';
-import './graph_renderer';
+import '@google/graph-renderer';
+import {
+  BaseNode,
+  BaseEdge,
+  DefaultEdgePathService,
+  Side,
+} from '@google/graph-renderer';
 
 @customElement('my-advanced-graph')
 export class MyAdvancedGraph extends LitElement {
@@ -281,15 +335,15 @@ Here is an example:
 ```typescript
 import {LitElement, html} from 'lit';
 import {customElement, state} from 'lit/decorators';
+import '@google/graph-renderer';
 import {
   BaseNode,
   BaseEdge,
   CustomEndpointMarker,
-  Side,
+  DefaultEdgePathService,
   EndpointMarker,
-} from './common/interfaces';
-import {DefaultEdgePathService} from './edge_path_service/default_edge_path_service';
-import './graph_renderer';
+  Side,
+} from '@google/graph-renderer';
 
 @customElement('my-graph-with-custom-markers')
 export class MyGraphWithCustomMarkers extends LitElement {
@@ -362,11 +416,11 @@ Here is an example of creating a custom purple arrow based on the default
 `ARROW` marker:
 
 ```typescript
-import { BUILT_IN_MARKER_DEFINITIONS } from './edge_canvas/edge_canvas';
 import {
+  BUILT_IN_MARKER_DEFINITIONS,
   CustomEndpointMarker,
-  EndpointMarker
-} from './common/interfaces';
+  EndpointMarker,
+} from '@google/graph-renderer';
 
 // ...
 
@@ -409,8 +463,8 @@ synchronized with the renderer.
 ```typescript
 import {LitElement, html} from 'lit';
 import {customElement, state} from 'lit/decorators';
-import {BaseNode, BaseEdge} from './common/interfaces';
-import './graph_renderer';
+import '@google/graph-renderer';
+import {BaseNode, BaseEdge} from '@google/graph-renderer';
 // ... other imports
 
 @customElement('my-graph-host')
@@ -506,9 +560,15 @@ to manage the application's state.
 ```typescript
 import {LitElement, html} from 'lit';
 import {customElement, query, state} from 'lit/decorators';
-import {BaseNode, BaseEdge, RenderableEdge, Point} from './common/interfaces';
-import {GraphRenderer} from './graph_renderer';
-import {EDGE_LABEL_TEMPLATE_ID} from './directed_graph/directed_graph';
+import '@google/graph-renderer';
+import {
+  BaseNode,
+  BaseEdge,
+  EDGE_LABEL_TEMPLATE_ID,
+  GraphRenderer,
+  Point,
+  RenderableEdge,
+} from '@google/graph-renderer';
 import './my-interactive-node';
 
 @customElement('my-graph-host')
@@ -605,7 +665,7 @@ ports.
 ```typescript
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators';
-import {BaseNode} from './common/interfaces';
+import {BaseNode} from '@google/graph-renderer';
 
 @customElement('my-interactive-node-with-ports')
 export class MyInteractiveNodeWithPorts extends LitElement {
@@ -644,8 +704,8 @@ export class MyInteractiveNodeWithPorts extends LitElement {
 ```typescript
 import {LitElement, html} from 'lit';
 import {customElement, state} from 'lit/decorators';
-import {BaseNode, BaseEdge, Side, Endpoint} from './common/interfaces';
-import './graph_renderer';
+import '@google/graph-renderer';
+import {BaseNode, BaseEdge, Endpoint, Side} from '@google/graph-renderer';
 import './my-interactive-node-with-ports';
 
 @customElement('my-connection-host')
@@ -896,8 +956,8 @@ the graph renderer.
 ```typescript
 import {LitElement, html} from 'lit';
 import {customElement, query, state} from 'lit/decorators';
-import {computeFitToScreen} from './common/compute_fit_to_screen';
-import './graph_renderer';
+import '@google/graph-renderer';
+import {BaseNode, computeFitToScreen} from '@google/graph-renderer';
 
 @customElement('my-graph-host')
 export class MyGraphHost extends LitElement {
