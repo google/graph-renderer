@@ -64,17 +64,17 @@ jobs:
           node-version: 20
           registry-url: 'https://wombat-dressing-room.appspot.com/'
 
-      # The `prepublishOnly` script in package.json invokes locally-installed
-      # tools (tsc, vitest, vite, cross-env) as a release-time safety net,
-      # so node_modules must exist before `npm publish` runs.
-      - run: npm install
-
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4
         with:
           name: dist-files
           path: dist
 
-      - run: npm publish
+      # `--ignore-scripts` bypasses `prepublishOnly` (typecheck + test:run +
+      # build:lib), which already ran in the `build` job and whose tools are
+      # not installed here. (This job uses the publish-only wombat registry,
+      # which cannot resolve all transitive deps for `npm install`.) The
+      # `dist/` artifact downloaded above is what gets published.
+      - run: npm publish --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.WOMBAT_TOKEN }}
