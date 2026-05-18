@@ -917,25 +917,15 @@ This enum controls the action of the mouse wheel when passed to the
 
 ### Events
 
-Event Name        | event.detail              | Description
-:---------------- | :------------------------ | :---------------------------
-`graph-pan`       | `{ event: DragEvent,      | Fired when the graph is
-                  | topLeftCorner: Point }`   | panned via pointer drag or
-                  |                           | mouse wheel scroll.
-`graph-zoom`      | `{ event: WheelEvent,     | Fired when the graph is
-                  | zoom: number }`           | zoomed using the mouse
-                  |                           | wheel.
-`node-drag-start` | `BaseNode`                | Fired when a node drag
-                  |                           | interaction begins.
-`node-drag-move`  | `{ id: string, x: number, | Fired continuously as a node
-                  | y: number }`              | is being dragged.
-`node-drag-end`   | `{ id: string, x: number, | Fired when a node drag
-                  | y: number }`              | interaction ends, providing
-                  |                           | the final position.
-`edge-click`      | `RenderableEdge`          | Fired when an interactive
-                  |                           | edge is clicked.
-`resize-viewport` | `Dimension`               | Fired when the component's
-                  |                           | main wrapper is resized.
+| Event Name        | `event.detail`                              | Description                                                                            |
+| :---------------- | :------------------------------------------ | :------------------------------------------------------------------------------------- |
+| `graph-pan`       | `{ event: DragEvent, topLeftCorner: Point }`| Fired when the graph is panned via pointer drag or mouse wheel scroll.                 |
+| `graph-zoom`      | `{ event: WheelEvent, zoom: number }`       | Fired when the graph is zoomed using the mouse wheel.                                  |
+| `node-drag-start` | `BaseNode`                                  | Fired when a node drag interaction begins.                                             |
+| `node-drag-move`  | `{ id: string, x: number, y: number }`      | Fired continuously as a node is being dragged.                                         |
+| `node-drag-end`   | `{ id: string, x: number, y: number }`      | Fired when a node drag interaction ends, providing the final position.                 |
+| `edge-click`      | `RenderableEdge`                            | Fired when an interactive edge is clicked.                                             |
+| `resize-viewport` | `Dimension`                                 | Fired when the component's main wrapper is resized.                                    |
 
 ## Utility Functions
 
